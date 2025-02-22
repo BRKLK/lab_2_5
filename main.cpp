@@ -3,11 +3,12 @@
 #include<cmath>
 
 
+template <typename T>
 class MyVector
 {
 private:
 
-    int* arr;
+    T* arr;
     int len;
     int cap;
 
@@ -19,11 +20,11 @@ private:
 public:
     MyVector() : arr(nullptr), len(0), cap(0) {}
 
-    MyVector(int n, int value)
+    MyVector(int n, T value)
     {
         len = n;
         cap = nextPowerOfTwo(n);
-        arr = new int[cap];
+        arr = new T[cap];
 
         for(int i = 0; i < n; i++) arr[i] = value;
     }
@@ -32,7 +33,7 @@ public:
     {
         len = other.len;
         cap = other.cap;
-        arr = new int[cap];
+        arr = new T[cap];
 
         for (int i = 0; i < other.len; i++) {arr[i] = other.arr[i];}
     }
@@ -66,7 +67,7 @@ public:
         
 
         cap = nextPowerOfTwo(new_size);
-        int* new_arr = new int[cap];
+        int* new_arr = new T[cap];
 
         for(int i = 0; i < len && i < new_size; i++)
             new_arr[i] = arr[i];
@@ -93,7 +94,7 @@ public:
 
     void shrink_to_fit()
     {
-        int* new_arr = new int[len];
+        T* new_arr = new T[len];
         cap = len;
 
         for(int i = 0; i < len; i++) {new_arr[i] = arr[i];}
@@ -102,7 +103,7 @@ public:
         arr = new_arr;
     }
 
-    void push_back(int value)
+    void push_back(T value)
     {
         len++;
         int new_cap = nextPowerOfTwo(len);
@@ -115,7 +116,7 @@ public:
         else
         {
             cap = new_cap;
-            int* new_arr = new int[new_cap];
+            T* new_arr = new T[new_cap];
 
             for(int i = 0; i < len-1; i++) {new_arr[i] = arr[i];}
 
@@ -126,10 +127,10 @@ public:
         }
     }
 
-    void insert(int index, int value)
+    void insert(int index, T value)
     {
         len++;
-        int new_cap = nextPowerOfTwo(len);
+        T new_cap = nextPowerOfTwo(len);
 
         if(new_cap == cap)
         {
@@ -139,7 +140,7 @@ public:
         }
         else
         {
-            int* new_arr = new int[new_cap];
+            T* new_arr = new T[new_cap];
             cap = new_cap;
 
             for(int i = 0; i < index; i++) {new_arr[i] = arr[i];}
@@ -164,7 +165,7 @@ public:
         }
         else
         {
-            int* new_arr = new int[new_cap];
+            T* new_arr = new T[new_cap];
             cap = new_cap;
 
             for(int i = 0; i < pos; i++) {new_arr[i] = arr[i];}
@@ -185,20 +186,19 @@ public:
         {
             for(int i = 0; (last + i + 1) < len; i++)
             {
-                arr[first] = arr[last + i + 1];
+                arr[first+i] = arr[last + i + 1];
             }
 
             len = new_len;
         }
         else
         {
-            int* new_arr = new int[new_cap];
+            T* new_arr = new T[new_cap];
             cap = new_cap;
 
             for(int i = 0; i < first; i++) {new_arr[i] = arr[i];}
 
             for(int i = last + 1; i < len; i++) {new_arr[i - 1 - (last - first)] = arr[i];}
-            // for(int i = first; )
 
             len = new_len;
             delete arr;
@@ -220,16 +220,8 @@ public:
 
 int main ()
 {
-//   std::vector<int> myvector;
-
-//   // set some content in the vector:
-//   for (int i=0; i < 1; i++) myvector.push_back(i);
-
-//   std::cout << "size: " << (int) myvector.size() << '\n';
-//   std::cout << "capacity: " << (int) myvector.capacity() << '\n';
-//   std::cout << "max_size: " << (int) myvector.max_size() << '\n';
     
-    MyVector vec;
+    MyVector<int> vec;
 
     vec.push_back(1);
     vec.push_back(2);
@@ -242,20 +234,45 @@ int main ()
     vec.push_back(9);
     vec.push_back(10);
 
+    for(int i = 0; i < vec.size(); i++)
+    {
+        std::cout << vec[i] << std::endl;
+    } 
 
-    vec.erase(0, 6);
+    std::cout << "Front" << vec.front();
+    std::cout << "Back: " << vec.back();
+    std::cout << "Is empty: " << vec.empty();
+    std::cout << std::endl << "Vector size: " << vec.size() << '\n';
+    std::cout << "Vector capacity: " << vec.capacity() << '\n';
+    std::cout << "Reserving..." << std::endl;
+    vec.reserve(4);
+    std::cout << "New capacity: " << vec.capacity() << std::endl;
+
+    std::cout << "Inserting..." << '\n';
+    vec.insert(2, 123);
+
+    for(int i = 0; i < vec.size(); i++)
+    {
+        std::cout << vec[i] << std::endl;
+    }
+    
+    
+    std::cout << "Resizing..." << '\n';
+    vec.resize(8);
 
     for(int i = 0; i < vec.size(); i++)
     {
         std::cout << vec[i] << std::endl;
     }
 
-    // std::cout << std::endl << "Vector size: " << vec.size() << '\n';
-    // std::cout << "Vector capacity: " << vec.capacity() << '\n';
-    // std::cout << std::endl << "Capacity: " << vec.capacity() << std::endl;
-    // std::cout << "Reserving..." << std::endl;
-    // vec.reserve(4);
-    // std::cout << "New capacity: " << vec.capacity() << std::endl;
+
+    std::cout << "Erasing..." << '\n';
+    vec.erase(2, 5);
+
+    for(int i = 0; i < vec.size(); i++)
+    {
+        std::cout << vec[i] << std::endl;
+    }
 
     return 0;
 }
